@@ -10,7 +10,7 @@ var GenreSchema = new Schema(
 // Virtual for Genre's URL
 GenreSchema
   .virtual('url')
-  .get(() => {
+  .get(function () {
     return '/catalog/genre/' + this._id
   })
 

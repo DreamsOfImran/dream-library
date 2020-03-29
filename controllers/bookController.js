@@ -1,12 +1,42 @@
 var Book = require('../models/book')
+var Author = require('../models/author')
+var Genre = require('../models/genre')
+var BookInstance = require('../models/bookinstance')
 
-exports.index = function (req, res) {
-  res.send('Under construction: Site Home Page')
+var async = require('async')
+
+exports.index = (req, res) => {
+
+  async.parallel({
+    book_count: (callback) => {
+      Book.countDocuments({}, callback) // Pass an empty object as match condition to find all documents of this collection
+    },
+    book_instance_count: (callback) => {
+      BookInstance.countDocuments({}, callback)
+    },
+    book_instance_available_count: (callback) => {
+      BookInstance.countDocuments({ status: 'Available' }, callback)
+    },
+    author_count: (callback) => {
+      Author.countDocuments({}, callback)
+    },
+    genre_count: (callback) => {
+      Genre.countDocuments({}, callback)
+    }
+  }, (err, results) => {
+    res.render('index', { title: 'Local Library Home', error: err, data: results })
+  })
 }
 
 // Display list of all books
-exports.book_list = function (req, res) {
-  res.send('Under construction: Book list')
+exports.book_list = (req, res) => {
+  Book.find({}, 'title author')
+    .populate('author')
+    .exec((err, list_books) => {
+      if (err) { return next(err) }
+      //Successful, so render
+      res.render('book_list', { title: 'Book List', book_list: list_books })
+    })
 }
 
 // Display detail page for a specific book
