@@ -14,7 +14,7 @@ var app = express();
 
 //Set up mongoose connection
 var mongoose = require('mongoose');
-var mongoDB = process.env.MONGO_DB_URI;
+var mongoDB = process.env.REACT_APP_MONGO_DB_URI;
 mongoose.connect(mongoDB, { useNewUrlParser: true });
 var db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
@@ -44,7 +44,7 @@ app.use(function (req, res, next) {
 app.use(function (err, req, res, next) {
   // set locals, only providing error in development
   res.locals.message = err.message;
-  res.locals.error = req.app.get('env') === process.env.NODE_ENV ? err : {};
+  res.locals.error = req.app.get('env') === process.env.REACT_APP_NODE_ENV ? err : {};
 
   // render the error page
   res.status(err.status || 500);
