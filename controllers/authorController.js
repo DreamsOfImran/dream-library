@@ -1,6 +1,7 @@
 var Author = require('../models/author')
 var Book = require('../models/book')
 var async = require('async')
+var debug = require('debug')('author')
 const { body, validationResult } = require('express-validator/check')
 const { sanitizeBody } = require('express-validator/filter')
 
@@ -131,7 +132,10 @@ exports.author_delete_post = (req, res, next) => {
 // Display Author update form on GET
 exports.author_update_get = (req, res, next) => {
   Author.findById(req.params.id, function (err, author) {
-    if (err) { return next(err); }
+    if (err) {
+      debug('update error: ' + err)
+      return next(err);
+    }
     if (author == null) {
       var err = new Error('Author not found');
       err.status = 404;
