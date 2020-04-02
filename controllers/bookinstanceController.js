@@ -95,7 +95,7 @@ exports.bookinstance_delete_get = (req, res, next) => {
 }
 
 // Handle BookInstance Delete on POST
-exports.bookinstance_delete_post = (req, res) => {
+exports.bookinstance_delete_post = (req, res, next) => {
   BookInstance.findByIdAndRemove(req.body.id, function deleteBookInstance(err) {
     if (err) { return next(err); }
     res.redirect('/catalog/bookinstances');
@@ -103,11 +103,11 @@ exports.bookinstance_delete_post = (req, res) => {
 }
 
 // Display BookInstance Update form on GET
-exports.bookinstance_update_get = (req, res) => {
+exports.bookinstance_update_get = (req, res, next) => {
   res.send('Under construction: BookInstace Update GET')
 };
 
 // Handle BookInstance Update on POST
-exports.bookinstance_update_post = (req, res) => {
+exports.bookinstance_update_post = (req, res, next) => {
   res.send('Under construction: BookInstace Update POST')
 };

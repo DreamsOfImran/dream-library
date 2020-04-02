@@ -129,11 +129,11 @@ exports.author_delete_post = (req, res, next) => {
 }
 
 // Display Author update form on GET
-exports.author_update_get = (req, res) => {
+exports.author_update_get = (req, res, next) => {
   res.send('Under construction: Author Update GET')
 }
 
 // Handle Author Update on POST
-exports.author_update_post = (req, res) => {
+exports.author_update_post = (req, res, next) => {
   res.send('Under construction: Author Update POST')
 }

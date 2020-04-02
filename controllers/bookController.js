@@ -7,8 +7,7 @@ const { sanitizeBody } = require('express-validator/filter')
 
 var async = require('async')
 
-exports.index = (req, res) => {
-
+exports.index = (req, res, next) => {
   async.parallel({
     book_count: (callback) => {
       Book.countDocuments({}, callback)
@@ -31,7 +30,7 @@ exports.index = (req, res) => {
 }
 
 // Display list of all books
-exports.book_list = (req, res) => {
+exports.book_list = (req, res, next) => {
   Book.find({}, 'title author')
     .populate('author')
     .exec((err, list_books) => {
@@ -189,11 +188,11 @@ exports.book_delete_post = (req, res, next) => {
 }
 
 // Display book update form on GET
-exports.book_update_get = (req, res) => {
+exports.book_update_get = (req, res, next) => {
   res.send('Under construction: Book update GET')
 }
 
 // Handle book update on POST
-exports.book_update_post = (req, res) => {
+exports.book_update_post = (req, res, next) => {
   res.send('Under construction: Book update POST')
 }
