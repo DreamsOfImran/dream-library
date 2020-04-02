@@ -2,8 +2,7 @@ var Author = require('../models/author')
 var Book = require('../models/book')
 var async = require('async')
 var debug = require('debug')('author')
-const { body, validationResult } = require('express-validator/check')
-const { sanitizeBody } = require('express-validator/filter')
+const { body, validationResult, sanitizeBody } = require('express-validator')
 
 // Display list of all authors
 exports.author_list = (req, res, next) => {
@@ -30,13 +29,13 @@ exports.author_detail = (req, res, next) => {
         .exec(callback)
     },
   }, (err, results) => {
-    if (err) { return next(err); }
+    if (err) { return next(err) }
     if (results.author == null) {
-      var err = new Error('Author not found');
-      err.status = 404;
-      return next(err);
+      var err = new Error('Author not found')
+      err.status = 404
+      return next(err)
     }
-    res.render('author_detail', { title: 'Author Detail', author: results.author, author_books: results.authors_books });
+    res.render('author_detail', { title: 'Author Detail', author: results.author, author_books: results.authors_books })
   })
 }
 
@@ -63,11 +62,11 @@ exports.author_create_post = [
   sanitizeBody('date_of_death').toDate(),
 
   (req, res, next) => {
-    const errors = validationResult(req);
+    const errors = validationResult(req)
 
     if (!errors.isEmpty()) {
-      res.render('author_form', { title: 'Create Author', author: req.body, errors: errors.array() });
-      return;
+      res.render('author_form', { title: 'Create Author', author: req.body, errors: errors.array() })
+      return
     }
     else {
       // Create an Author object with escaped and trimmed data.
@@ -77,15 +76,15 @@ exports.author_create_post = [
           family_name: req.body.family_name,
           date_of_birth: req.body.date_of_birth,
           date_of_death: req.body.date_of_death
-        });
+        })
       author.save((err) => {
-        if (err) { return next(err); }
+        if (err) { return next(err) }
         // Successful - redirect to new author record.
-        res.redirect(author.url);
-      });
+        res.redirect(author.url)
+      })
     }
   }
-];
+]
 
 // Display Author Delete on GET
 exports.author_delete_get = (req, res, next) => {
@@ -97,11 +96,11 @@ exports.author_delete_get = (req, res, next) => {
       Book.find({ 'author': req.params.id }).exec(callback)
     },
   }, (err, results) => {
-    if (err) { return next(err); }
+    if (err) { return next(err) }
     if (results.author == null) {
-      res.redirect('/catalog/authors');
+      res.redirect('/catalog/authors')
     }
-    res.render('author_delete', { title: 'Delete Author', author: results.author, author_books: results.authors_books });
+    res.render('author_delete', { title: 'Delete Author', author: results.author, author_books: results.authors_books })
   })
 }
 
@@ -115,14 +114,14 @@ exports.author_delete_post = (req, res, next) => {
       Book.find({ 'author': req.body.authorid }).exec(callback)
     },
   }, (err, results) => {
-    if (err) { return next(err); }
+    if (err) { return next(err) }
     if (results.authors_books.length > 0) {
-      res.render('author_delete', { title: 'Delete Author', author: results.author, author_books: results.authors_books });
-      return;
+      res.render('author_delete', { title: 'Delete Author', author: results.author, author_books: results.authors_books })
+      return
     }
     else {
       Author.findByIdAndRemove(req.body.authorid, function deleteAuthor(err) {
-        if (err) { return next(err); }
+        if (err) { return next(err) }
         res.redirect('/catalog/authors')
       })
     }
@@ -134,15 +133,15 @@ exports.author_update_get = (req, res, next) => {
   Author.findById(req.params.id, function (err, author) {
     if (err) {
       debug('update error: ' + err)
-      return next(err);
+      return next(err)
     }
     if (author == null) {
-      var err = new Error('Author not found');
-      err.status = 404;
-      return next(err);
+      var err = new Error('Author not found')
+      err.status = 404
+      return next(err)
     }
-    res.render('author_form', { title: 'Update Author', author: author });
-  });
+    res.render('author_form', { title: 'Update Author', author: author })
+  })
 }
 
 // Handle Author Update on POST
@@ -163,7 +162,7 @@ exports.author_update_post = [
   sanitizeBody('date_of_death').toDate(),
 
   (req, res, next) => {
-    const errors = validationResult(req);
+    const errors = validationResult(req)
 
     var author = new Author(
       {
@@ -173,17 +172,17 @@ exports.author_update_post = [
         date_of_death: req.body.date_of_death,
         _id: req.params.id
       }
-    );
+    )
 
     if (!errors.isEmpty()) {
-      res.render('author_form', { title: 'Update Author', author: author, errors: errors.array() });
-      return;
+      res.render('author_form', { title: 'Update Author', author: author, errors: errors.array() })
+      return
     }
     else {
       Author.findByIdAndUpdate(req.params.id, author, {}, function (err, theauthor) {
-        if (err) { return next(err); }
-        res.redirect(theauthor.url);
-      });
+        if (err) { return next(err) }
+        res.redirect(theauthor.url)
+      })
     }
   }
-];
+]
