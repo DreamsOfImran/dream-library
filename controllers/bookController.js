@@ -24,7 +24,7 @@ exports.index = (req, res, next) => {
       Genre.countDocuments({}, callback)
     }
   }, (err, results) => {
-    res.render('index', { title: 'Local Library Home', error: err, data: results })
+    res.render('index', { title: 'Dream Library Home', error: err, data: results })
   })
 }
 
